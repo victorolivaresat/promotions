@@ -2,7 +2,8 @@ import ConfirmationModal from "../../utils/ConfirmationModal";
 import { toast, ToastContainer } from "react-toastify";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState, useEffect, useRef } from "react";
-import { FaImage, FaPowerOff } from "react-icons/fa";
+import { FaImage, FaPowerOff, FaUser } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 import Select from "react-select";
 import {
@@ -13,19 +14,19 @@ import {
   getAllDocumentTypes,
   getStoreDetails,
   uploadFile,
-  validateDataForm
+  validateDataForm,
 } from "../../api/dataFormApi";
 
 const Home = () => {
   const { currentUser, isAuthenticated, logoutUser } = useAuth();
   const [isPromotionValid, setIsPromotionValid] = useState(false);
 
-
+  const urlBase = import.meta.env.VITE_URL;
+  const navigate = useNavigate();
 
   const currentDate = new Date();
   const limaTime = new Date(currentDate.getTime() - 5 * 60 * 60 * 1000);
   const formattedDate = limaTime.toISOString().split("T")[0];
-
 
   const [exchangeDate, setExchangeDate] = useState(
     // new Date().toISOString('en-CA', { timeZone: 'America/Lima' }).split("T")[0]
@@ -178,6 +179,11 @@ const Home = () => {
         name: "ticketTypeId",
         message: "Debe seleccionar un tipo de ticket.",
       },
+      {
+        field: path,
+        name: "path",
+        message: "La imagen es obligatoria.",
+      },
     ];
 
     const formErrors = requiredFields.reduce(
@@ -271,7 +277,9 @@ const Home = () => {
     e.preventDefault();
 
     if (!isPromotionValid) {
-      toast.error("Por favor, valida la promoción del cliente antes de enviar.");
+      toast.error(
+        "Por favor, valida la promoción del cliente antes de enviar."
+      );
       return;
     }
 
@@ -328,7 +336,7 @@ const Home = () => {
 
       const response = await createDataForm(dataForm);
 
-      console.log(response)
+      console.log(response);
 
       if (response.success) {
         console.log("DataForm created:", response);
@@ -345,17 +353,15 @@ const Home = () => {
 
         setFormData({});
         setPreviewImage("");
-        setIsPromotionValid(false)
+        setIsPromotionValid(false);
 
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
-
       } else {
         console.log("Error:", response.message);
         toast.error(response.message);
       }
-
     } catch (error) {
       console.error("Error creating DataForm:", error);
       toast.error(error.response.data.error);
@@ -381,7 +387,6 @@ const Home = () => {
             toast.success(response.message);
             setPath(response.filePath);
 
-
             console.log("File uploaded successfully:", response);
           } else {
             toast.error("Error al subir la imagen");
@@ -394,7 +399,6 @@ const Home = () => {
   };
 
   const validatePromotion = async () => {
-
     if (!numberDocumentClient) {
       toast.error("Por favor, completa el campo Número de Documento.");
       return;
@@ -418,12 +422,12 @@ const Home = () => {
 
     if (validationResponse.success) {
       toast.success("Promoción válida!");
-      console.log(validationResponse)
+      console.log(validationResponse);
       setIsPromotionValid(true);
     } else {
       toast.error(validationResponse.message);
       setIsPromotionValid(false);
-      console.log(validationResponse)
+      console.log(validationResponse);
     }
   };
 
@@ -457,11 +461,7 @@ const Home = () => {
 
       <div className="max-w-2xl w-full p-8 bg-white rounded-lg shadow-lg">
         <ToastContainer />
-        <img
-          src="logo2.png"
-          alt="Logo"
-          className="w-40 mx-auto"
-        />
+        <img src="logo2.png" alt="Logo" className="w-40 mx-auto" />
         <h1 className="text-2xl font-bold text-center mb-1 text-slate-800">
           Bienvenido
           {isAuthenticated && currentUser ? `, ${currentUser.userName}` : ""}
@@ -643,10 +643,6 @@ const Home = () => {
 
             {/* Upload Image */}
             <div className="mb-6">
-              <label className="block text-gray-400 text-sm font-bold mb-2">
-                Sube una imagen
-              </label>
-
               <button
                 type="button"
                 onClick={() => fileInputRef.current.click()}
@@ -674,8 +670,11 @@ const Home = () => {
                   />
                 </div>
               )}
-            </div>
 
+              {errors.path && (
+                <p className="text-red-500 text-sm mt-2">{errors.path}</p>
+              )}
+            </div>
           </div>
 
           <div className="flex justify-center mt-8 gap-8">
@@ -703,6 +702,15 @@ const Home = () => {
               onClick={logoutUser}
             >
               <FaPowerOff size={20} />
+            </button>
+
+            {/* User */}
+            <button
+              className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={() => navigate(urlBase + "user")}
+            >
+              <FaUser size={20} />
             </button>
           </div>
         </form>

@@ -41,7 +41,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-
   useEffect(() => {
     async function checkLoginStatus() {
       const cookies = cookie.get();

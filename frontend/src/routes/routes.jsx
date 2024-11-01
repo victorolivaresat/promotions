@@ -1,9 +1,10 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import RouteTransition from "../utils/RouteTransition";
-import Home from "../pages/Home/Home";
 import NotFound from "../pages/NotFound/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "../pages/Login/Login";
+import Home from "../pages/Home/Home";
+import User from "../pages/Users/User";
 
 
 const urlBasic = import.meta.env.VITE_URL;
@@ -24,6 +25,15 @@ const AppRoutes = () => (
         element={
           <RouteTransition>
             <Home />
+          </RouteTransition>
+        }
+      />
+
+      <Route
+        path={urlBasic + "user"}
+        element={
+          <RouteTransition>
+            <User />
           </RouteTransition>
         }
       />

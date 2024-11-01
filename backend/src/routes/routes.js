@@ -4,10 +4,12 @@ const storeRoutes = require('./storeRoutes');
 const promotionRoutes = require('./promotionRoutes');
 const documentTypeRoutes = require('./documentTypeRoutes');
 const dataFormRoutes = require('./dataFormRoutes');
+const userRoutes = require('./userRoutes');
 const gestionClientesRoutes = require('./gestionClientesRoutes');
 
 routes.use(authRoutes);
 routes.use(storeRoutes);
+routes.use(userRoutes);
 routes.use(promotionRoutes);
 routes.use(dataFormRoutes);
 routes.use(documentTypeRoutes);
