@@ -21,6 +21,7 @@ const login = async (req, res) => {
       success: true,
       userId: user.userId,
       userName: user.userName,
+      nationalId: user.nationalId,
     });
 
   } catch (error) {
@@ -65,6 +66,7 @@ const verifyToken = async (req, res) => {
         message: "Token is valid",
         userId: user.userId,
         userName: user.userName,
+        nationalId: user.nationalId,
       });
     });
   } catch (error) {
